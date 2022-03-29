@@ -113,6 +113,9 @@ void WaypointSaver::TwistPoseCallback(const geometry_msgs::TwistStampedConstPtr 
 
 void WaypointSaver::outputProcessing(geometry_msgs::Pose current_pose, double velocity) const
 {
+  // open the file as an append,and all data written to the file is appended to the end of file
+  // std::ofstream ---> write file 
+  // std::ifstream ---> read file
   std::ofstream ofs(filename_.c_str(), std::ios::app);
   static geometry_msgs::Pose previous_pose;
   static bool receive_once = false;
