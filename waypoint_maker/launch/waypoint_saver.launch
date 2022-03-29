@@ -9,6 +9,7 @@
   <arg name="save_velocity" default="true" />
   <arg name="lane_topic" default="/lane_waypoints_array" />
 
+  <!-- unless value is false,start waypoint_saver node -->
   <node pkg="waypoint_maker" type="waypoint_saver" name="waypoint_saver" output="screen" unless="$(arg input_type)">
     <param name="save_filename" value="$(arg save_finename)" />
     <param name="interval" value="$(arg interval)" />
@@ -16,6 +17,7 @@
     <param name="pose_topic" value="$(arg pose_topic)" />
     <param name="save_velocity" value="$(arg save_velocity)" />
   </node>
+  <!--  if value is true,start waypoint_extractor node -->
   <node pkg="waypoint_maker" type="waypoint_extractor" name="waypoint_extractor" output="screen" if="$(arg input_type)">
     <param name="lane_csv" value="$(arg save_finename)" />
     <param name="lane_topic" value="$(arg lane_topic)" />
