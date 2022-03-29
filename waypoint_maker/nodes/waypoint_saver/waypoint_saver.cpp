@@ -176,11 +176,12 @@ void WaypointSaver::displayMarker(geometry_msgs::Pose pose, double velocity) con
   marker.ns = "saved_waypoint_velocity";
   marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
   marker.action = visualization_msgs::Marker::ADD;
+  // write speed as string content into marker.text
   std::ostringstream oss;
   oss << std::fixed << std::setprecision(2) << velocity << " km/h";
   marker.text = oss.str();
   marray.markers.push_back(marker);
-
+  // publish waypoint save point
   waypoint_saver_pub_.publish(marray);
   id++;
 }
