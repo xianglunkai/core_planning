@@ -30,6 +30,7 @@
 
 static const int SYNC_FRAMES = 50;
 
+// Adaptive time synchronization
 typedef message_filters::sync_policies::ApproximateTime<geometry_msgs::TwistStamped, geometry_msgs::PoseStamped>
     TwistPoseSync;
 
@@ -76,12 +77,16 @@ WaypointSaver::WaypointSaver() : private_nh_("~")
   private_nh_.param<bool>("save_velocity", save_velocity_, false);
 
   // subscriber
+  // use message_filter ,this equivalent to ros::Subscriber<geometry_msgs::PoseStamped>("pose_topic",50,poseCallback)
   pose_sub_ = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, pose_topic_, 50);
 
   if (save_velocity_)
   {
+    // Twist sub message filter
     twist_sub_ = new message_filters::Subscriber<geometry_msgs::TwistStamped>(nh_, velocity_topic_, 50);
+    // synchronizer pose and velocity channels connect
     sync_tp_ = new message_filters::Synchronizer<TwistPoseSync>(TwistPoseSync(SYNC_FRAMES), *twist_sub_, *pose_sub_);
+    // register callback using boost::bind(callback,this,_1,_2)
     sync_tp_->registerCallback(boost::bind(&WaypointSaver::TwistPoseCallback, this, _1, _2));
   }
   else
