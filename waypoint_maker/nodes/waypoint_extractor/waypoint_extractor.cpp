@@ -52,9 +52,11 @@ public:
     std::string directory_path, filename, extension;
 
     tmp = file_path;
+    // matching characters can be found from back to the front
     const std::string::size_type idx_slash(tmp.find_last_of("/"));
     if (idx_slash != std::string::npos)
     {
+      // erase 0->idx_slash 
       tmp.erase(0, idx_slash);
     }
     const std::string::size_type idx_dot(tmp.find_last_of("."));
@@ -81,14 +83,18 @@ public:
     {
       return;
     }
+    // create multi file path
     std::vector<std::string> dst_multi_file_path(lane_.lanes.size(), lane_csv_);
     if (lane_.lanes.size() > 1)
     {
       for (auto& el : dst_multi_file_path)
       {
+        // std::to_string(&el - &dst_multi_file_path[0]) = 0,1,2,3,.....
+        // el = *0.csv,*1.csv *2.csv
         el = addFileSuffix(el, std::to_string(&el - &dst_multi_file_path[0]));
       }
     }
+    // save data into multi file
     saveLaneArray(dst_multi_file_path, lane_);
   }
 
@@ -107,6 +113,7 @@ public:
     for (const auto& file_path : paths)
     {
       const unsigned long idx = &file_path - &paths[0];
+      // write data using std::ofstream
       std::ofstream ofs(file_path.c_str());
       ofs << "x,y,z,yaw,velocity,change_flag,steering_flag,accel_flag,stop_flag,event_flag" << std::endl;
       for (const auto& el : lane_array.lanes[idx].waypoints)
@@ -119,6 +126,7 @@ public:
           el.change_flag, el.wpstate.steering_state, el.wpstate.accel_state,
           el.wpstate.stop_state, el.wpstate.event_state
         };
+        // specifies the decimal point
         ofs << std::fixed << std::setprecision(4);
         ofs << p.x << "," << p.y << "," << p.z << "," << yaw << "," << vel;
         for (int i = 0; i < 5; ofs << "," << states[i++]){}
