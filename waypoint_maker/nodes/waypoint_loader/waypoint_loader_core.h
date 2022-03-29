@@ -43,15 +43,16 @@ enum class FileFormat : int32_t
   unknown = -1,
 };
 
+// translate enum class into integer
 typedef std::underlying_type<FileFormat>::type FileFormatInteger;
 
 inline double kmph2mps(double velocity_kmph)
 {
-  return (velocity_kmph * 1000) / (60 * 60);
+  return (velocity_kmph * 1000) / (60 * 60);  //  ~= 0.3 * kmph
 }
 inline double mps2kmph(double velocity_mps)
 {
-  return (velocity_mps * 60 * 60) / 1000;
+  return (velocity_mps * 60 * 60) / 1000;   // ~=4.0 * mps
 }
 
 class WaypointLoaderNode
